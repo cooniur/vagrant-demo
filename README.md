@@ -1,10 +1,10 @@
-Setup Development Servers
-=========================
+Vagrant Demo
+============
 
 Description
 -----------
 
-Setup three servers for development:
+This demo sets up these servers for Java development:
 
   * Database server: dbserver, 10.0.33.2
   * Application server: appserver, 10.0.33.3
@@ -12,7 +12,6 @@ Setup three servers for development:
 
 How to use
 ----------
-vagrant up [server-name]
 
-Configuration
--------------
+	vagrant up [server-name]
+
