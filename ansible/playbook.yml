@@ -1,10 +1,10 @@
 ---
 # file: playbook.yml
+
 - hosts: all
   roles:
-    #- common
-    #- webtier
 
 - hosts: app_servers
   roles:
   - { role: app-servers }
+

@@ -14,4 +14,3 @@ How to use
 ----------
 
 	vagrant up [server-name]
-

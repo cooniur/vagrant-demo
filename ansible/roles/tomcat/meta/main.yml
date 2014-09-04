@@ -1,0 +1,5 @@
+---
+# file: roles/tomcat/meta/main.yml
+
+dependencies:
+  - { role: java, java_versions: ["oracle-java8-installer", "oracle-java8-set-default"] }

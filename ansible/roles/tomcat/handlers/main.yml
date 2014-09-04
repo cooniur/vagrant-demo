@@ -1,0 +1,6 @@
+---
+# file: roles/tomcat/handlers/main.yml
+
+- name: restart tomcat
+  shell:
+    "nohup {{tomcat_dir}}/{{tomcat_version}}/force-restart-tomcat.sh &"

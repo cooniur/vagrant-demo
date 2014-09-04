@@ -1,0 +1,92 @@
+---
+# file: roles/tomcat/tasks/main.yml
+
+- name: download Tomcat
+  local_action: >
+    get_url
+      url="{{tomcat_download_url}}"
+      dest="{{tomcat_download_dir}}/{{tomcat_package}}"
+  tags: download
+
+- name: unpacks Tomcat
+  local_action: >
+    unarchive
+      src="{{tomcat_download_dir}}/{{tomcat_package}}"
+      dest="{{tomcat_download_dir}}/"
+  tags: unpack
+
+- name: ensures {{tomcat_dir}}/{{tomcat_version}} exists
+  file:
+    path="{{tomcat_dir}}/{{tomcat_version}}"
+    state=directory
+  tags: unpack
+
+- name: ensures Tomcat is installed at {{tomcat_dir}}/{{tomcat_version}}
+  synchronize:
+    src="{{tomcat_download_dir}}/apache-tomcat-{{tomcat_version}}/{{item}}"
+    dest="{{tomcat_dir}}/{{tomcat_version}}"
+    archive=yes
+    recursive=yes
+  tags: unpack
+  with_items:
+    - bin
+    - conf
+    - lib
+    - LICENSE
+    - NOTICE
+    - RELEASE-NOTES
+    - RUNNING.txt
+    - temp
+    - webapps
+    - work
+
+- name: ensures Tomcat context config folder exists
+  file:
+    path="{{tomcat_dir}}/{{tomcat_version}}/conf/Catalina/localhost"
+    state=directory
+
+- name: ensures {{tomcat_log_dir}} exists
+  file:
+    path="{{tomcat_log_dir}}"
+    state=directory
+
+- name: configures server.xml
+  template:
+    src="server.xml"
+    dest="{{tomcat_dir}}/{{tomcat_version}}/conf/server.xml"
+
+- name: configures tomcat-users.xml
+  template:
+    src="tomcat-users.xml"
+    dest="{{tomcat_dir}}/{{tomcat_version}}/conf/tomcat-users.xml"
+
+- name: configures logging.properties
+  template:
+    src="logging.properties"
+    dest="{{tomcat_dir}}/{{tomcat_version}}/conf/logging.properties"
+
+- name: creates force-restart-tomcat.sh
+  template:
+    src="force-restart-tomcat.sh"
+    dest="{{tomcat_dir}}/{{tomcat_version}}/force-restart-tomcat.sh"
+    mode=0700
+
+- name: ensures executable scripts have the right permissions
+  file:
+    path="{{tomcat_dir}}/{{tomcat_version}}/bin/{{item}}"
+    mode=0755
+    state=file
+  with_items:
+    - startup.sh
+    - catalina.sh
+    - shutdown.sh
+
+- name: configures the setenv.sh script
+  template:
+    src="setenv.sh"
+    dest="{{tomcat_dir}}/{{tomcat_version}}/bin/setenv.sh"
+    mode=0755
+
+- name: ensures tomcat is restarted
+  notify:
+    - restart tomcat
