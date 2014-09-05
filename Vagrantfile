@@ -41,7 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ansible.playbook = "./ansible/playbook.yml"
         ansible.inventory_path = "./ansible/hosts"
         ansible.sudo = true
-        ansible.verbose = "v"
+        ansible.verbose = "vv"
       end
     end # config.vm.define
   end # vm_nodes.each

@@ -2,24 +2,27 @@
 # file: roles/tomcat/tasks/main.yml
 
 - name: download Tomcat
-  local_action: >
-    get_url
+  local_action: > 
+    get_url 
       url="{{tomcat_download_url}}"
       dest="{{tomcat_download_dir}}/{{tomcat_package}}"
-  tags: download
+      force=no
+  sudo: False
+  tags: tomcat-download
 
 - name: unpacks Tomcat
   local_action: >
     unarchive
       src="{{tomcat_download_dir}}/{{tomcat_package}}"
       dest="{{tomcat_download_dir}}/"
-  tags: unpack
+  sudo: False
+  tags: tomcat-unpack
 
 - name: ensures {{tomcat_dir}}/{{tomcat_version}} exists
   file:
     path="{{tomcat_dir}}/{{tomcat_version}}"
     state=directory
-  tags: unpack
+  tags: tomcat-unpack
 
 - name: ensures Tomcat is installed at {{tomcat_dir}}/{{tomcat_version}}
   synchronize:
@@ -27,7 +30,7 @@
     dest="{{tomcat_dir}}/{{tomcat_version}}"
     archive=yes
     recursive=yes
-  tags: unpack
+  tags: tomcat-upload
   with_items:
     - bin
     - conf
@@ -44,32 +47,38 @@
   file:
     path="{{tomcat_dir}}/{{tomcat_version}}/conf/Catalina/localhost"
     state=directory
+  tags: tomcat-conf
 
 - name: ensures {{tomcat_log_dir}} exists
   file:
     path="{{tomcat_log_dir}}"
     state=directory
+  tags: tomcat-conf
 
 - name: configures server.xml
   template:
     src="server.xml"
     dest="{{tomcat_dir}}/{{tomcat_version}}/conf/server.xml"
+  tags: tomcat-conf
 
 - name: configures tomcat-users.xml
   template:
     src="tomcat-users.xml"
     dest="{{tomcat_dir}}/{{tomcat_version}}/conf/tomcat-users.xml"
+  tags: tomcat-conf
 
 - name: configures logging.properties
   template:
     src="logging.properties"
     dest="{{tomcat_dir}}/{{tomcat_version}}/conf/logging.properties"
+  tags: tomcat-conf
 
 - name: creates force-restart-tomcat.sh
   template:
     src="force-restart-tomcat.sh"
     dest="{{tomcat_dir}}/{{tomcat_version}}/force-restart-tomcat.sh"
-    mode=0700
+    mode=0755
+  tags: tomcat-conf
 
 - name: ensures executable scripts have the right permissions
   file:
@@ -80,13 +89,19 @@
     - startup.sh
     - catalina.sh
     - shutdown.sh
+  tags: tomcat-conf
 
 - name: configures the setenv.sh script
   template:
     src="setenv.sh"
     dest="{{tomcat_dir}}/{{tomcat_version}}/bin/setenv.sh"
     mode=0755
+  tags: tomcat-conf
+
+- name: "change {{tomcat_dir}} owner:group to vagrant:vagrant"
+  shell: chown -R vagrant:vagrant {{tomcat_dir}}
 
 - name: ensures tomcat is restarted
-  notify:
-    - restart tomcat
+  shell: echo restart tomcat
+  notify: restart tomcat
+  tags: tomcat-conf

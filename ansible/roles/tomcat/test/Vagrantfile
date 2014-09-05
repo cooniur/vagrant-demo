@@ -1,0 +1,18 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Multi-VM Configuration: Builds Web, Application, and Database Servers using JSON config file
+# Configures VMs based on Hosted Chef Server defined Environment and Node (vs. Roles)
+# Author: Gary A. Stafford
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "hashicorp/precise64"
+  
+  # Ansible Provision
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook.yml"
+    ansible.verbose = "vvvv"
+  end
+end # Vagrant.configure
