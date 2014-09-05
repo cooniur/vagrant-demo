@@ -1,10 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 
 <tomcat-users>
-      <role username="admin-gui" />
-    {% for user in tomcat_users %}
-      <role rolename="{{user.name}}"/>
-      <user username="{{user.name}}" password="{{user.password}}" roles="{{user.roles}}"/>
-    {% endfor %}
+	<role rolename="manager-gui"/>
+	<role rolename="manager-script"/>
+	<role rolename="manager-jmx"/>
+	<role rolename="manager-status"/>
+	<role rolename="admin-gui"/>
+	<role rolename="admin-script"/>
+
+{% for user in tomcat_users %}
+	<user username="{{user.name}}" password="{{user.password}}" roles="{{user.roles}}"/>
+{% endfor %}
 
 </tomcat-users>

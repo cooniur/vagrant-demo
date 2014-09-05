@@ -104,4 +104,5 @@
 - name: ensures tomcat is restarted
   shell: echo restart tomcat
   notify: restart tomcat
+  sudo: False
   tags: tomcat-conf

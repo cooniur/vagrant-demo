@@ -9,16 +9,6 @@
           ":host": 2202,
           ":guest": 22,
           ":id": "ssh"
-        },
-        {
-          ":host": 1529,
-          ":guest": 1529,
-          ":id": "xe-db"
-        },
-        {
-          ":host": 8380,
-          ":guest": 8380,
-          ":id": "xe-listen"
         }
       ],
       ":memory": 2048,
@@ -35,9 +25,9 @@
           ":id": "ssh"
         },
         {
-          ":host": 7709,
-          ":guest": 7709,
-          ":id": "wls-listen"
+          ":host": 9980,
+          ":guest": 8080,
+          ":id": "tomcat"
         }
       ],
       ":memory": 2048,
@@ -55,8 +45,8 @@
         },
         {
           ":host": 9080,
-          ":guest": 8080,
-          ":id": "apache"
+          ":guest": 80,
+          ":id": "nginx"
         }
       ],
       ":memory": 1024,

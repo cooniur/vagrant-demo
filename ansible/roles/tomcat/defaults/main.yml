@@ -25,7 +25,7 @@ tomcat_redirect_port: 8443
 tomcat_connection_timeout: 20000
 
 tomcat_users: [
-  { name: "tomcat", password: "tomcat", roles: "tomcat,admin-gui"}
+  { name: "test", password: "test", roles: "manager-gui,admin-gui"}
 ]
 
 tomcat_java_opts: ""
